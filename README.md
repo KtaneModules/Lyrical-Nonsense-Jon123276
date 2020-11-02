@@ -1,1 +1,1 @@
-# Lyrical-Nonsense
+#[ModKit Wiki](../../wiki)
