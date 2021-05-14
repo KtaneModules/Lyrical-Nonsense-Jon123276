@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -53,6 +53,9 @@ public class LyricalNonsence : MonoBehaviour
         
     };
 
+    IEnumerator textChange;
+    IEnumerator songCycle;
+
     void Start()
     {
         moduleId = moduleIdCounter++;
@@ -61,11 +64,14 @@ public class LyricalNonsence : MonoBehaviour
         Debug.LogFormat("[Lyrical Nonsense #{0}], The song selected is {1}", moduleId, selectedSong.Song);
         Buttons[0].OnInteract += delegate
         {
+            if (textChange != null) StopCoroutine(textChange);
+            if (songCycle != null) StopCoroutine(songCycle);
             if (idle1)
             {
                 Displays[0].text = "";
                 Displays[1].text = "";
-                StartCoroutine(ChangeText1());
+                textChange = ChangeText1();
+                StartCoroutine(textChange);
                 Audio.PlaySoundAtTransform(selectedSong.SongParts[Rnd.Range(0, 3)], Buttons[0].transform);
                 idle1 = false;
             }
@@ -75,7 +81,8 @@ public class LyricalNonsence : MonoBehaviour
                 songSelect %= 18;
                 Displays[0].text = "";
                 Displays[1].text = "";
-                StartCoroutine(ChangeSongs(songSelect));
+                songCycle = ChangeSongs(songSelect);
+                StartCoroutine(songCycle);
             }
             return false;
         };
@@ -83,9 +90,12 @@ public class LyricalNonsence : MonoBehaviour
         {
             if (idle1)
                 return false;
+            if (textChange != null) StopCoroutine(textChange);
+            if (songCycle != null) StopCoroutine(songCycle);
             Displays[0].text = "";
             Displays[1].text = "";
-            StartCoroutine(ChangeText1());
+            textChange = ChangeText1();
+            StartCoroutine(textChange);
             Audio.PlaySoundAtTransform(selectedSong.SongParts[Rnd.Range(0, 3)], Buttons[0].transform);
             return false;
         };
@@ -114,6 +124,8 @@ public class LyricalNonsence : MonoBehaviour
     }
     IEnumerator ChangeText1()
     {
+        Displays[0].fontSize = 90;
+        Displays[1].fontSize = 90;
         yield return null;
         for (int i = 0; i < defaultDisplay[0].Length; i++)
         {
@@ -143,231 +155,33 @@ public class LyricalNonsence : MonoBehaviour
     IEnumerator ChangeSongs(int a)
     {
         yield return null;
-        switch (a)
+        string song = songs[a].Song;
+        if (a == 9)
         {
-            case 0:
-                for (int i = 0; i < "The Husk".Length; i++)
-                {
-                    Displays[0].text += "The Husk"[i];
-                    yield return new WaitForSeconds(0.01f);
-                }
-                for (int i = 0; i < "Rings of Saturn".Length; i++)
-                {
-                    Displays[1].text += "Rings of Saturn"[i];
-                    yield return new WaitForSeconds(0.01f);
-                }
-                break;
-            case 1:
-                for (int i = 0; i < "Demolisher".Length; i++)
-                {
-                    Displays[0].text += "Demolisher"[i];
-                    yield return new WaitForSeconds(0.01f);
-                }
-                for (int i = 0; i < "Slaughter to Prevail".Length; i++)
-                {
-                    Displays[1].text += "Slaughter to Prevail"[i];
-                    yield return new WaitForSeconds(0.01f);
-                }
-                break;
-            case 2:
-                for (int i = 0; i < "Mirrors".Length; i++)
-                {
-                    Displays[0].text += "Mirrors"[i];
-                    yield return new WaitForSeconds(0.01f);
-                }
-                for (int i = 0; i < "Fit For An Autopsy".Length; i++)
-                {
-                    Displays[1].text += "Fit For An Autopsy"[i];
-                    yield return new WaitForSeconds(0.01f);
-                }
-                break;
-            case 3:
-                for (int i = 0; i < "The Void".Length; i++)
-                {
-                    Displays[0].text += "The Void"[i];
-                    yield return new WaitForSeconds(0.01f);
-                }
-                for (int i = 0; i < "Parkway Drive".Length; i++)
-                {
-                    Displays[1].text += "Parkway Drive"[i];
-                    yield return new WaitForSeconds(0.01f);
-                }
-                break;
-            case 4:
-                for (int i = 0; i < "The eagle flies alone".Length; i++)
-                {
-                    Displays[0].text += "The eagle flies alone"[i];
-                    yield return new WaitForSeconds(0.01f);
-                }
-                for (int i = 0; i < "Arch Enemy".Length; i++)
-                {
-                    Displays[1].text += "Arch Enemy"[i];
-                    yield return new WaitForSeconds(0.01f);
-                }
-                break;
-            case 5:
-                for (int i = 0; i < "Involuntary Doppelgänger".Length; i++)
-                {
-                    Displays[0].text += "Involuntary Doppelgänger"[i];
-                    yield return new WaitForSeconds(0.01f);
-                }
-                for (int i = 0; i < "Archspire".Length; i++)
-                {
-                    Displays[1].text += "Archspire"[i];
-                    yield return new WaitForSeconds(0.01f);
-                }
-                break;
-            case 6:
-                for (int i = 0; i < "In Solitude".Length; i++)
-                {
-                    Displays[0].text += "In Solitude"[i];
-                    yield return new WaitForSeconds(0.01f);
-                }
-                for (int i = 0; i < "Frowning".Length; i++)
-                {
-                    Displays[1].text += "Frowning"[i];
-                    yield return new WaitForSeconds(0.01f);
-                }
-                break;
-            case 7:
-                for (int i = 0; i < "Apparition".Length; i++)
-                {
-                    Displays[0].text += "Apparition"[i];
-                    yield return new WaitForSeconds(0.01f);
-                }
-                for (int i = 0; i < "Spawn of Possession".Length; i++)
-                {
-                    Displays[1].text += "Spawn of Possession"[i];
-                    yield return new WaitForSeconds(0.01f);
-                }
-                break;
-            case 8:
-                for (int i = 0; i < "The Violation".Length; i++)
-                {
-                    Displays[0].text += "The Violation"[i];
-                    yield return new WaitForSeconds(0.01f);
-                }
-                for (int i = 0; i < "Fleshgod Apocalypse".Length; i++)
-                {
-                    Displays[1].text += "Fleshgod Apocalypse"[i];
-                    yield return new WaitForSeconds(0.01f);
-                }
-                break;
-            case 9:
-                Displays[0].fontSize = 75;
-                for (int i = 0; i < "Those who from the Heaven Came".Length; i++)
-                {
-                    Displays[0].text += "Those who from the Heaven Came"[i];
-                    yield return new WaitForSeconds(0.01f);
-                }
-                for (int i = 0; i < "Inferi".Length; i++)
-                {
-                    Displays[1].text += "Inferi"[i];
-                    yield return new WaitForSeconds(0.01f);
-                }
-                break;
-            case 10:
-                Displays[0].fontSize = 90;
-                for (int i = 0; i < "Ages Die".Length; i++)
-                {
-                    Displays[0].text += "Ages Die"[i];
-                    yield return new WaitForSeconds(0.01f);
-                }
-                for (int i = 0; i < "Hideous Divinity".Length; i++)
-                {
-                    Displays[1].text += "Hideous Divinity"[i];
-                    yield return new WaitForSeconds(0.01f);
-                }
-                break;
-            case 11:
-                for (int i = 0; i < "Fast Paced Society".Length; i++)
-                {
-                    Displays[0].text += "Fast Paced Society"[i];
-                    yield return new WaitForSeconds(0.01f);
-                }
-                for (int i = 0; i < "Vektor".Length; i++)
-                {
-                    Displays[1].text += "Vektor"[i];
-                    yield return new WaitForSeconds(0.01f);
-                }
-                break;
-            case 12:
-                for (int i = 0; i < "Hymn of Sanity".Length; i++)
-                {
-                    Displays[0].text += "Hymn of Sanity"[i];
-                    yield return new WaitForSeconds(0.01f);
-                }
-                for (int i = 0; i < "The Faceless".Length; i++)
-                {
-                    Displays[1].text += "The Faceless"[i];
-                    yield return new WaitForSeconds(0.01f);
-                }
-                break;
-            case 13:
-                for (int i = 0; i < "Exile of the Floating World".Length; i++)
-                {
-                    Displays[0].text += "Exile of the Floating World"[i];
-                    yield return new WaitForSeconds(0.01f);
-                }
-                for (int i = 0; i < "Whispered".Length; i++)
-                {
-                    Displays[1].text += "Whispered"[i];
-                    yield return new WaitForSeconds(0.01f);
-                }
-                break;
-            case 14:
-                for (int i = 0; i < "Monochrome".Length; i++)
-                {
-                    Displays[0].text += "Monochrome"[i];
-                    yield return new WaitForSeconds(0.01f);
-                }
-                for (int i = 0; i < "Exilelord".Length; i++)
-                {
-                    Displays[1].text += "Exilelord"[i];
-                    yield return new WaitForSeconds(0.01f);
-                }
-                break;
-            case 15:
-                Displays[0].fontSize = 45;
-                Displays[1].fontSize = 60;
-                for (int i = 0; i < "Yomi yori Kikoyu, Koukoku No Hi To Honoo No Syoujo".Length; i++)
-                {   
-                    Displays[0].text += "Yomi yori Kikoyu, Koukoku No Hi To Honoo No Syoujo"[i];
-                    yield return new WaitForSeconds(0.01f);
-                }
-                for (int i = 0; i < "Imperial Circus Dead Decadence".Length; i++)
-                {
-                    Displays[1].text += "Imperial Circus Dead Decadence"[i];
-                    yield return new WaitForSeconds(0.01f);
-                }
-                break;
-            case 16:
-                Displays[0].fontSize = 90;
-                Displays[1].fontSize = 80;
-                for (int i = 0; i < "Outburst".Length; i++)
-                {
-                    Displays[0].text += "Outburst"[i];
-                    yield return new WaitForSeconds(0.01f);
-                }
-                for (int i = 0; i < "Irreversible Mechanism".Length; i++)
-                {
-                    Displays[1].text += "Irreversible Mechanism"[i];
-                    yield return new WaitForSeconds(0.01f);
-                }
-                break;
-            case 17:
-                Displays[1].fontSize = 90;
-                for (int i = 0; i < "The Collapse".Length; i++)
-                {
-                    Displays[0].text += "The Collapse"[i];
-                    yield return new WaitForSeconds(0.01f);
-                }
-                for (int i = 0; i < "Frontierer".Length; i++)
-                {
-                    Displays[1].text += "Frontierer"[i];
-                    yield return new WaitForSeconds(0.01f);
-                }
-                break;
+            Displays[0].fontSize = 75;
+        }else if (a == 15)
+        {
+            Displays[0].fontSize = 45;
+            Displays[1].fontSize = 60;
+        }else if(a == 16)
+        {
+            Displays[0].fontSize = 90;
+            Displays[1].fontSize = 80;
+        }else
+        {
+            Displays[0].fontSize = 90;
+            Displays[1].fontSize = 90;
+        }
+        for (int i = 0; i < song.Length; i++)
+        {
+            Displays[0].text += song[i];
+            yield return new WaitForSeconds(0.01f);
+        }
+        string band = songs[a].Band;
+        for (int i = 0; i < band.Length; i++)
+        {
+            Displays[1].text += band[i];
+            yield return new WaitForSeconds(0.01f);
         }
     }
 #pragma warning disable 414
